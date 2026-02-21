@@ -148,6 +148,7 @@ body {
   padding: 10px;
   border-radius: 6px;
   margin-top: 8px;
+  font-weight: bold;
 }
 
 .copy-btn {
@@ -184,6 +185,8 @@ body {
   font-weight: bold;
   cursor: pointer;
   color: white;
+  text-decoration: none;
+  display: block;
 }
 
 .fb-btn { background: #1877f2; }
@@ -259,8 +262,16 @@ body {
     <h3>Contact Support</h3>
 
     <button class="option-btn fb-btn" onclick="openMessenger()">💬 Facebook Messenger</button>
-    <button class="option-btn call-btn" onclick="window.location.href='tel:09665084666'">📞 Call Now</button>
-    <button class="option-btn text-btn" onclick="window.location.href='sms:09665084666'">📩 Send SMS</button>
+
+    <a href="tel:+639665084666" class="option-btn call-btn">
+      📞 Call Now
+    </a>
+
+    <a href="sms:+639665084666?body=Hi%20MTECH%20Fiber,%20I%20already%20sent%20my%20payment."
+       class="option-btn text-btn">
+      📩 Send SMS
+    </a>
+
   </div>
 </div>
 
@@ -304,9 +315,17 @@ function openMessenger() {
   document.getElementById("messengerModal").style.display = "flex";
 }
 
+/* WORKING COPY FUNCTION */
 function copyNumber() {
   const number = "09665084666";
-  navigator.clipboard.writeText(number);
+
+  const textarea = document.createElement("textarea");
+  textarea.value = number;
+  document.body.appendChild(textarea);
+  textarea.select();
+  textarea.setSelectionRange(0, 99999);
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
 
   const btn = document.getElementById("copyBtn");
   const msg = document.getElementById("copiedMsg");
@@ -314,6 +333,10 @@ function copyNumber() {
   btn.innerText = "✓ COPIED";
   btn.style.background = "#16a34a";
   msg.style.opacity = "1";
+
+  if (navigator.vibrate) {
+    navigator.vibrate(100);
+  }
 
   setTimeout(() => {
     btn.innerText = "COPY NUMBER";
