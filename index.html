@@ -252,7 +252,7 @@ body {
       📞 Call Now
     </a>
 
-    <a href="sms:+639665084666" class="option-btn text-btn">
+    <a href="#" class="option-btn text-btn" onclick="openSMS()">
       📩 Send SMS
     </a>
 
@@ -281,6 +281,20 @@ function openQR(type) {
 
 function openContact() {
   document.getElementById("contactModal").style.display = "flex";
+}
+
+function openSMS() {
+  const number = "+639665084666";
+  const message = "Hi MTECH Fiber, I already sent my payment.";
+  const encodedMessage = encodeURIComponent(message);
+
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isIOS) {
+    window.location.href = `sms:${number}&body=${encodedMessage}`;
+  } else {
+    window.location.href = `sms:${number}?body=${encodedMessage}`;
+  }
 }
 
 function copyNumber() {
