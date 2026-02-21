@@ -79,19 +79,16 @@ body {
 .gcash-btn { background: #22c55e; }
 .maya-btn { background: #00b14f; }
 
-.confirm-btn,
 .contact-btn {
   display: block;
   padding: 12px;
   border-radius: 10px;
   font-weight: bold;
-  margin-top: 12px;
+  margin-top: 15px;
   cursor: pointer;
   text-align: center;
+  background: #0084ff;
 }
-
-.confirm-btn { background: #374151; }
-.contact-btn { background: #0084ff; }
 
 .footer {
   margin-top: 15px;
@@ -137,7 +134,6 @@ body {
   cursor: pointer;
 }
 
-/* QR INFO */
 .qr-info {
   margin-top: 15px;
   font-size: 14px;
@@ -161,32 +157,18 @@ body {
   color: white;
   width: 100%;
   margin-top: 8px;
-  transition: 0.3s;
-}
-
-.copy-btn:hover {
-  background: #16a34a;
-}
-
-.copied-msg {
-  font-size: 12px;
-  color: #22c55e;
-  margin-top: 6px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .option-btn {
   margin-top: 12px;
   padding: 10px;
   border-radius: 8px;
-  border: none;
   width: 100%;
   font-weight: bold;
-  cursor: pointer;
   color: white;
   text-decoration: none;
   display: block;
+  text-align: center;
 }
 
 .fb-btn { background: #1877f2; }
@@ -215,44 +197,10 @@ body {
     <button class="maya-btn" onclick="openQR('maya')">💳 Maya</button>
   </div>
 
-  <div class="confirm-btn" onclick="openConfirm()">✔ Confirm Payment</div>
   <div class="contact-btn" onclick="openContact()">💬 Contact Support</div>
 
   <div class="footer">© 2026 MTECH Fiber</div>
 
-</div>
-
-<!-- QR MODAL -->
-<div id="qrModal" class="modal" onclick="closeAll()">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <span class="close-btn" onclick="closeAll()">✖</span>
-    <h3 id="qrTitle">Scan to Pay</h3>
-    <img id="qrImage">
-
-    <div class="qr-info">
-      <div>MA•••N M.</div>
-
-      <div class="number-box">
-        0966-508-4666
-      </div>
-
-      <button id="copyBtn" class="copy-btn" onclick="copyNumber()">
-        COPY NUMBER
-      </button>
-
-      <div id="copiedMsg" class="copied-msg">Copied!</div>
-    </div>
-
-  </div>
-</div>
-
-<!-- CONFIRM MODAL -->
-<div id="confirmModal" class="modal" onclick="closeAll()">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <span class="close-btn" onclick="closeAll()">✖</span>
-    <h3>Payment Confirmation</h3>
-    <img src="https://i.imgur.com/qF4SveK.png">
-  </div>
 </div>
 
 <!-- CONTACT MODAL -->
@@ -261,109 +209,25 @@ body {
     <span class="close-btn" onclick="closeAll()">✖</span>
     <h3>Contact Support</h3>
 
-    <button class="option-btn fb-btn" onclick="openMessenger()">💬 Facebook Messenger</button>
-
     <a href="tel:+639665084666" class="option-btn call-btn">
       📞 Call Now
     </a>
 
-    <button class="option-btn text-btn" onclick="sendSMS()">
-      📩 Send SMS
-    </button>
+ <a href="sms:+639665084666?body=Hi%20MTECH%20Fiber,%20I%20have%20already%20sent%20my%20payment.%20Account%20Name:%20_________.%20Please%20confirm.%20Thank%20you."
+   class="option-btn text-btn">
+   📩 Send SMS
+</a>
 
-  </div>
-</div>
-
-<!-- MESSENGER MODAL -->
-<div id="messengerModal" class="modal" onclick="closeAll()">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <span class="close-btn" onclick="closeAll()">✖</span>
-    <h3>Chat via Messenger</h3>
-    <img src="https://i.imgur.com/dwFeZGq.png">
   </div>
 </div>
 
 <script>
-function openQR(type) {
-  const modal = document.getElementById("qrModal");
-  const qrImage = document.getElementById("qrImage");
-  const qrTitle = document.getElementById("qrTitle");
-
-  if (type === "gcash") {
-    qrImage.src = "https://i.imgur.com/DXGhTbY.png";
-    qrTitle.innerText = "Scan to Pay (GCash)";
-  }
-
-  if (type === "maya") {
-    qrImage.src = "https://i.imgur.com/pakdCyM.png";
-    qrTitle.innerText = "Scan to Pay (Maya)";
-  }
-
-  modal.style.display = "flex";
-}
-
-function openConfirm() {
-  document.getElementById("confirmModal").style.display = "flex";
-}
-
 function openContact() {
   document.getElementById("contactModal").style.display = "flex";
 }
 
-function openMessenger() {
-  document.getElementById("messengerModal").style.display = "flex";
-}
-
-/* UNIVERSAL SMS FUNCTION */
-function sendSMS() {
-  const number = "+639665084666";
-  const message = "Hi MTECH Fiber, I already sent my payment.";
-  const encodedMessage = encodeURIComponent(message);
-
-  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  if (isIOS) {
-    window.location.href = `sms:${number}&body=${encodedMessage}`;
-  } else {
-    window.location.href = `sms:${number}?body=${encodedMessage}`;
-  }
-}
-
-/* WORKING COPY FUNCTION */
-function copyNumber() {
-  const number = "09665084666";
-
-  const textarea = document.createElement("textarea");
-  textarea.value = number;
-  document.body.appendChild(textarea);
-  textarea.select();
-  textarea.setSelectionRange(0, 99999);
-  document.execCommand("copy");
-  document.body.removeChild(textarea);
-
-  const btn = document.getElementById("copyBtn");
-  const msg = document.getElementById("copiedMsg");
-
-  btn.innerText = "✓ COPIED";
-  btn.style.background = "#16a34a";
-  msg.style.opacity = "1";
-
-  if (navigator.vibrate) {
-    navigator.vibrate(100);
-  }
-
-  setTimeout(() => {
-    btn.innerText = "COPY NUMBER";
-    btn.style.background = "#22c55e";
-    msg.style.opacity = "0";
-  }, 1500);
-}
-
 function closeAll() {
-  document.getElementById("qrModal").style.display = "none";
-  document.getElementById("confirmModal").style.display = "none";
   document.getElementById("contactModal").style.display = "none";
-  document.getElementById("messengerModal").style.display = "none";
 }
 </script>
 
