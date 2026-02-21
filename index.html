@@ -267,10 +267,9 @@ body {
       📞 Call Now
     </a>
 
-    <a href="sms:+639665084666?body=Hi%20MTECH%20Fiber,%20I%20already%20sent%20my%20payment."
-       class="option-btn text-btn">
+    <button class="option-btn text-btn" onclick="sendSMS()">
       📩 Send SMS
-    </a>
+    </button>
 
   </div>
 </div>
@@ -313,6 +312,21 @@ function openContact() {
 
 function openMessenger() {
   document.getElementById("messengerModal").style.display = "flex";
+}
+
+/* UNIVERSAL SMS FUNCTION */
+function sendSMS() {
+  const number = "+639665084666";
+  const message = "Hi MTECH Fiber, I already sent my payment.";
+  const encodedMessage = encodeURIComponent(message);
+
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isIOS) {
+    window.location.href = `sms:${number}&body=${encodedMessage}`;
+  } else {
+    window.location.href = `sms:${number}?body=${encodedMessage}`;
+  }
 }
 
 /* WORKING COPY FUNCTION */
