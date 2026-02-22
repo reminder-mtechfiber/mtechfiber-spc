@@ -41,8 +41,15 @@ body {
 }
 
 .logo img {
-  width: 200px;
+  width: 150px;
   margin-bottom: 15px;
+}
+
+h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #e5e7eb;
 }
 
 .notice-box {
@@ -93,7 +100,14 @@ body {
   font-weight: bold;
   margin-top: 15px;
   cursor: pointer;
-  background: #0084ff;
+  background: #111827;
+  color: #e5e7eb;
+  transition: 0.3s ease;
+}
+
+.contact-btn:hover {
+  background: #0b1120;
+  color: white;
 }
 
 .footer {
@@ -170,9 +184,13 @@ body {
   color: white;
 }
 
-.call-btn { background: #16a34a; }
-.text-btn { background: #f59e0b; }
+.call-btn { 
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
 
+.text-btn { 
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
 </style>
 </head>
 
@@ -181,7 +199,7 @@ body {
 <div class="container">
 
   <div class="logo">
-    <img src="mtech.logo1.png">
+    <img src="mtech.logo1.png" alt="Logo">
   </div>
 
   <h2>Service Temporarily Restricted</h2>
@@ -202,7 +220,7 @@ body {
 
   <div class="contact-btn" onclick="openContact()">💬 Contact Support</div>
 
-  <div class="footer">© 2026 MTECH Fiber | Secure Access Portal</div>
+  <div class="footer">© 2026 (Brand Name) | Secure Access Portal</div>
 
 </div>
 
@@ -224,12 +242,11 @@ body {
     <span class="close-btn" onclick="closeAll()">✖</span>
     <h3>Contact Support</h3>
     <a href="tel:+639241030898" class="option-btn call-btn">📞 Call Now</a>
-    <a href="sms:+639241030898?body=Hi%20MTECH%20Fiber%2C%20I%20need%20assistance." class="option-btn text-btn">📩 Send SMS</a>
+    <a href="sms:+639241030898?" class="option-btn text-btn">📩 Send SMS</a>
   </div>
 </div>
 
 <script>
-
 function togglePayments() {
   const options = document.getElementById("paymentOptions");
   options.style.display = (options.style.display === "flex") ? "none" : "flex";
@@ -257,16 +274,33 @@ function openContact() {
   document.getElementById("contactModal").style.display = "flex";
 }
 
+// FIXED COPY FUNCTION (with fallback)
 function copyNumber(button) {
-  const number = document.getElementById("payNumber").innerText;
+  const number = document.getElementById("payNumber").innerText.replace(/-/g, '');
 
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(number).then(() => {
+      showCopied(button);
+    }).catch(() => {
+      fallbackCopy(number, button);
+    });
+  } else {
+    fallbackCopy(number, button);
+  }
+}
+
+function fallbackCopy(text, button) {
   const textarea = document.createElement("textarea");
-  textarea.value = number.replace(/-/g, '');
+  textarea.value = text;
   document.body.appendChild(textarea);
   textarea.select();
+  textarea.setSelectionRange(0, 99999);
   document.execCommand("copy");
   document.body.removeChild(textarea);
+  showCopied(button);
+}
 
+function showCopied(button){
   button.innerText = "✓ COPIED";
   setTimeout(() => {
     button.innerText = "COPY NUMBER";
@@ -277,7 +311,6 @@ function closeAll() {
   document.getElementById("qrModal").style.display = "none";
   document.getElementById("contactModal").style.display = "none";
 }
-
 </script>
 
 </body>
