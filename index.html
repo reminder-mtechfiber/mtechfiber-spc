@@ -41,7 +41,7 @@ body {
 }
 
 .logo img {
-  width: 150px;
+  width: 250px;
   margin-bottom: 15px;
 }
 
@@ -107,7 +107,6 @@ h2 {
 
 .contact-btn:hover {
   background: #0b1120;
-  color: white;
 }
 
 .footer {
@@ -173,23 +172,32 @@ h2 {
   margin-top: 8px;
 }
 
+/* OPTION BUTTONS */
 .option-btn {
   margin-top: 12px;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 10px;
   width: 100%;
   font-weight: bold;
-  text-decoration: none;
-  display: block;
+  border: none;
+  cursor: pointer;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.3s ease;
 }
 
-.call-btn { 
+.call-btn, .text-btn {
   background: linear-gradient(135deg, #6b7280, #4b5563);
 }
 
-.text-btn { 
-  background: linear-gradient(135deg, #6b7280, #4b5563);
+.call-btn:hover,
+.text-btn:hover {
+  transform: scale(1.03);
+  opacity: 0.9;
 }
 </style>
 </head>
@@ -199,7 +207,7 @@ h2 {
 <div class="container">
 
   <div class="logo">
-    <img src="mtech.logo1.png" alt="Logo">
+    <img src="TECH ART.gif" alt="Logo">
   </div>
 
   <h2>Service Temporarily Restricted</h2>
@@ -220,7 +228,7 @@ h2 {
 
   <div class="contact-btn" onclick="openContact()">💬 Contact Support</div>
 
-  <div class="footer">© 2026 (Brand Name) | Secure Access Portal</div>
+  <div class="footer">© 2026 MTECHFIBER | Secure Access Portal</div>
 
 </div>
 
@@ -232,7 +240,7 @@ h2 {
     <img id="qrImage">
     <div>MA•••N M.</div>
     <div class="number-box" id="payNumber">0966-508-4666</div>
-    <button class="copy-btn" onclick="copyNumber(this)">COPY NUMBER</button>
+    <button class="copy-btn" onclick="copyQRNumber(this)">COPY NUMBER</button>
   </div>
 </div>
 
@@ -241,8 +249,15 @@ h2 {
   <div class="modal-content" onclick="event.stopPropagation()">
     <span class="close-btn" onclick="closeAll()">✖</span>
     <h3>Contact Support</h3>
-    <a href="tel:+639241030898" class="option-btn call-btn">📞 Call Now</a>
-    <a href="sms:+639241030898?" class="option-btn text-btn">📩 Send SMS</a>
+
+    <a href="tel:+639665084666" class="option-btn call-btn">
+      📞 Call Now
+    </a>
+
+    <button type="button" class="option-btn text-btn" onclick="copyContactNumber(this)">
+      📋 Copy Number
+    </button>
+
   </div>
 </div>
 
@@ -274,36 +289,50 @@ function openContact() {
   document.getElementById("contactModal").style.display = "flex";
 }
 
-// FIXED COPY FUNCTION (with fallback)
-function copyNumber(button) {
+/* UNIVERSAL COPY FUNCTION */
+function copyQRNumber(button) {
   const number = document.getElementById("payNumber").innerText.replace(/-/g, '');
+  universalCopy(number, button, "COPY NUMBER");
+}
 
+function copyContactNumber(button) {
+  const number = "09665084666";
+  universalCopy(number, button, "📋 Copy Number");
+}
+
+function universalCopy(text, button, originalText) {
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(number).then(() => {
-      showCopied(button);
-    }).catch(() => {
-      fallbackCopy(number, button);
-    });
+    navigator.clipboard.writeText(text)
+      .then(() => showCopied(button, originalText))
+      .catch(() => fallbackCopy(text, button, originalText));
   } else {
-    fallbackCopy(number, button);
+    fallbackCopy(text, button, originalText);
   }
 }
 
-function fallbackCopy(text, button) {
+function fallbackCopy(text, button, originalText) {
   const textarea = document.createElement("textarea");
   textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
   document.body.appendChild(textarea);
+  textarea.focus();
   textarea.select();
-  textarea.setSelectionRange(0, 99999);
-  document.execCommand("copy");
+
+  try {
+    document.execCommand("copy");
+    showCopied(button, originalText);
+  } catch (err) {
+    alert("Please copy manually: " + text);
+  }
+
   document.body.removeChild(textarea);
-  showCopied(button);
 }
 
-function showCopied(button){
+function showCopied(button, originalText) {
   button.innerText = "✓ COPIED";
   setTimeout(() => {
-    button.innerText = "COPY NUMBER";
+    button.innerText = originalText;
   }, 1500);
 }
 
