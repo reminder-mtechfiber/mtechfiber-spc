@@ -37,7 +37,6 @@ body {
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 0 40px rgba(0,0,0,0.6);
   text-align: center;
 }
 
@@ -55,16 +54,16 @@ body {
 }
 
 .pay-now {
-  padding: 12px;
+  padding: 14px;
   border-radius: 10px;
   font-weight: bold;
   margin-top: 15px;
   background: linear-gradient(135deg, #22c55e, #16a34a);
-  text-align: center;
+  cursor: pointer;
 }
 
 .payment-group {
-  display: flex;
+  display: none;
   gap: 10px;
   margin-top: 12px;
 }
@@ -79,8 +78,13 @@ body {
   cursor: pointer;
 }
 
-.gcash-btn { background: #22c55e; }
-.maya-btn { background: #00b14f; }
+.gcash-btn { 
+  background: linear-gradient(135deg, #007dff, #005fcc);
+}
+
+.maya-btn { 
+  background: linear-gradient(135deg, #00b14f, #008f3f);
+}
 
 .contact-btn {
   display: block;
@@ -89,7 +93,6 @@ body {
   font-weight: bold;
   margin-top: 15px;
   cursor: pointer;
-  text-align: center;
   background: #0084ff;
 }
 
@@ -99,7 +102,7 @@ body {
   opacity: 0.6;
 }
 
-/* MODALS */
+/* MODAL */
 .modal {
   display: none;
   position: fixed;
@@ -154,32 +157,17 @@ body {
   color: white;
   width: 100%;
   margin-top: 8px;
-  transition: 0.3s;
-}
-
-.copy-btn:hover {
-  background: #16a34a;
-}
-
-.copied-msg {
-  font-size: 12px;
-  color: #22c55e;
-  margin-top: 6px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .option-btn {
   margin-top: 12px;
   padding: 10px;
   border-radius: 8px;
-  border: none;
   width: 100%;
   font-weight: bold;
-  cursor: pointer;
-  color: white;
   text-decoration: none;
   display: block;
+  color: white;
 }
 
 .call-btn { background: #16a34a; }
@@ -203,11 +191,11 @@ body {
     Please settle your account to restore access.
   </div>
 
-  <div class="pay-now">
+  <div class="pay-now" onclick="togglePayments()">
     💳 PAY NOW
   </div>
 
-  <div class="payment-group">
+  <div class="payment-group" id="paymentOptions">
     <button class="gcash-btn" onclick="openQR('gcash')">GCash</button>
     <button class="maya-btn" onclick="openQR('maya')">Maya</button>
   </div>
@@ -225,9 +213,8 @@ body {
     <h3 id="qrTitle">Scan to Pay</h3>
     <img id="qrImage">
     <div>MA•••N M.</div>
-    <div class="number-box">0966-508-4666</div>
+    <div class="number-box" id="payNumber">0966-508-4666</div>
     <button class="copy-btn" onclick="copyNumber(this)">COPY NUMBER</button>
-    <div class="copied-msg" id="copiedMsg">Copied!</div>
   </div>
 </div>
 
@@ -242,6 +229,11 @@ body {
 </div>
 
 <script>
+
+function togglePayments() {
+  const options = document.getElementById("paymentOptions");
+  options.style.display = (options.style.display === "flex") ? "none" : "flex";
+}
 
 function openQR(type) {
   const modal = document.getElementById("qrModal");
@@ -266,39 +258,19 @@ function openContact() {
 }
 
 function copyNumber(button) {
-  const number = "09665084666";
-  const msg = document.getElementById("copiedMsg");
+  const number = document.getElementById("payNumber").innerText;
 
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(number).then(showCopied).catch(fallbackCopy);
-  } else {
-    fallbackCopy();
-  }
+  const textarea = document.createElement("textarea");
+  textarea.value = number.replace(/-/g, '');
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textarea);
 
-  function fallbackCopy() {
-    const textarea = document.createElement("textarea");
-    textarea.value = number;
-    textarea.style.position = "fixed";
-    textarea.style.left = "-9999px";
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-    document.execCommand("copy");
-    document.body.removeChild(textarea);
-    showCopied();
-  }
-
-  function showCopied() {
-    button.innerText = "✓ COPIED";
-    button.style.background = "#16a34a";
-    msg.style.opacity = "1";
-
-    setTimeout(() => {
-      button.innerText = "COPY NUMBER";
-      button.style.background = "#22c55e";
-      msg.style.opacity = "0";
-    }, 1500);
-  }
+  button.innerText = "✓ COPIED";
+  setTimeout(() => {
+    button.innerText = "COPY NUMBER";
+  }, 1500);
 }
 
 function closeAll() {
